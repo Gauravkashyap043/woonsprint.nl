@@ -38,7 +38,7 @@ export const footerColumns: FooterColumn[] = [
     ],
   },
   {
-    title: 'Inrichting',
+    title: 'Inrichitng',
     links: [
       { label: 'Hangstoel', href: '/beste-hangstoel/' },
       { label: 'Boekenkast', href: '/beste-boekenkast/' },

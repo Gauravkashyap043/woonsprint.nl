@@ -1,14 +1,16 @@
 ---
+import { heroParagraphs } from '../data/homepage';
+
 interface Props {
   title?: string;
-  subtitle?: string;
+  paragraphs?: string[];
   image?: string;
   compact?: boolean;
 }
 
 const {
   title = 'Transformeer jouw huis in een thuis!',
-  subtitle = 'Geniet jij ook van het inrichten van je thuis en vind je het leuk om te lezen over de nieuwste trends, de beste producten te ontdekken en te snuffelen tussen al die verschillende soorten decoratie? Dan ben je bij ons aan het juiste adres! Wij vergelijken producten voor in huis, bekijken wat er hip is in de wereld van de woninginrichting en houden jou overal van op de hoogte!',
+  paragraphs = heroParagraphs,
   image = '/wp-content/uploads/2022/11/Frame1.svg',
   compact = false,
 } = Astro.props;
@@ -18,7 +20,15 @@ const {
   <div class="container hero__grid">
     <div class="hero__content">
       <h1>{title}</h1>
-      {subtitle && <p class="hero__subtitle">{subtitle}</p>}
+      {
+        paragraphs.length > 0 && (
+          <div class="hero__subtitle">
+            {paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+        )
+      }
     </div>
     {!compact && (
       <div class="hero__visual">
@@ -48,6 +58,7 @@ const {
 
   .hero__content {
     max-width: 560px;
+    text-align: left;
   }
 
   .hero h1 {
@@ -56,13 +67,19 @@ const {
     font-weight: 500;
     line-height: 1.2;
     margin-bottom: 1.5rem;
+    text-align: left;
   }
 
-  .hero__subtitle {
+  .hero__subtitle p {
     color: #fffdfd;
     font-size: clamp(0.9375rem, 2vw, 1rem);
     line-height: 1.65;
-    margin: 0;
+    margin: 0 0 1rem;
+    text-align: left;
+  }
+
+  .hero__subtitle p:last-child {
+    margin-bottom: 0;
   }
 
   .hero__visual {

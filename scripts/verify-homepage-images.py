@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify homepage and product images referenced on the site exist under public/."""
+"""Verify homepage images referenced in src/data/homepage.ts exist under public/."""
 
 from __future__ import annotations
 
@@ -9,18 +9,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
-PRODUCTS_TS = ROOT / "src" / "data" / "products.ts"
-
-REQUIRED_BRAND = [
-    "/images/brand/logo.png",
+HOMEPAGE_TS = ROOT / "src" / "data" / "homepage.ts"
+BRAND_PATHS = [
+    "/wp-content/uploads/2022/11/Frame-182.svg",
+    "/wp-content/uploads/2022/11/Frame-19.svg",
+    "/wp-content/uploads/2022/11/Frame1.svg",
+    "/wp-content/uploads/2022/11/Frame2.svg",
+    "/wp-content/uploads/2022/11/Frame3.svg",
+    "/wp-content/uploads/2022/11/cropped-Group-11-32x32.png",
     "/images/brand/hero-bg.png",
-    "/images/brand/tristan.png",
 ]
 
 
-def product_image_paths() -> list[str]:
-    text = PRODUCTS_TS.read_text(encoding="utf-8")
-    return sorted(set(re.findall(r"['\"](/images/products/[^'\"]+)['\"]", text)))
+def homepage_image_paths() -> list[str]:
+    text = HOMEPAGE_TS.read_text(encoding="utf-8")
+    return sorted(set(re.findall(r"['\"](/(?:wp-content|images)/[^'\"]+)['\"]", text)))
 
 
 def public_path(url_path: str) -> Path:
@@ -28,19 +31,18 @@ def public_path(url_path: str) -> Path:
 
 
 def main() -> int:
+    paths = sorted(set(BRAND_PATHS + homepage_image_paths()))
     missing: list[str] = []
-    checked: list[str] = []
 
-    for path in REQUIRED_BRAND + product_image_paths():
-        checked.append(path)
+    for path in paths:
         if not public_path(path).is_file():
             missing.append(path)
 
-    print(f"Checked {len(checked)} homepage/product image paths.")
+    print(f"Checked {len(paths)} homepage image paths.")
     if missing:
         print("MISSING:")
-        for m in missing:
-            print(f"  {m}")
+        for item in missing:
+            print(f"  {item}")
         return 1
 
     print("All required images present.")

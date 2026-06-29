@@ -26,6 +26,11 @@ import Navigation from './Navigation.astro';
             <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
           </svg>
         </a>
+        <a href="#" class="site-header__social-link" aria-label="TikTok">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"></path>
+          </svg>
+        </a>
       </div>
       <button type="button" class="site-header__search" aria-label="Zoeken" data-search-toggle>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -35,38 +40,49 @@ import Navigation from './Navigation.astro';
       </button>
     </div>
   </div>
-  <div class="site-header__search-panel" hidden data-search-panel>
-    <form action="/" method="get" role="search" class="site-header__search-form">
-      <label class="sr-only" for="site-search">Zoeken</label>
-      <input id="site-search" type="search" name="s" placeholder="Zoeken..." />
-      <button type="submit" class="btn btn--primary">Zoeken</button>
-    </form>
+  <div class="site-header__search-overlay" hidden data-search-overlay>
+    <div class="site-header__search-overlay-inner">
+      <button type="button" class="site-header__search-close" aria-label="Zoeken sluiten" data-search-close>
+        ×
+      </button>
+      <form action="/" method="get" role="search" class="site-header__search-form">
+        <label class="sr-only" for="site-search">Zoeken</label>
+        <input id="site-search" type="search" name="s" placeholder="Search..." />
+        <button type="submit" class="btn btn--primary">Zoeken</button>
+      </form>
+    </div>
   </div>
 </header>
 
 <script>
   const searchToggle = document.querySelector('[data-search-toggle]');
-  const searchPanel = document.querySelector('[data-search-panel]');
+  const searchOverlay = document.querySelector('[data-search-overlay]');
+  const searchClose = document.querySelector('[data-search-close]');
 
-  searchToggle?.addEventListener('click', () => {
-    const hidden = searchPanel?.hasAttribute('hidden');
-    if (hidden) {
-      searchPanel?.removeAttribute('hidden');
-      searchPanel?.querySelector('input')?.focus();
-    } else {
-      searchPanel?.setAttribute('hidden', '');
-    }
+  const openSearch = () => {
+    searchOverlay?.removeAttribute('hidden');
+    searchOverlay?.querySelector('input')?.focus();
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeSearch = () => {
+    searchOverlay?.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  };
+
+  searchToggle?.addEventListener('click', openSearch);
+  searchClose?.addEventListener('click', closeSearch);
+  searchOverlay?.addEventListener('click', (event) => {
+    if (event.target === searchOverlay) closeSearch();
   });
 </script>
 
 <style>
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: relative;
+    z-index: 99;
     width: 100%;
     background: var(--color-accent);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   }
 
   .site-header__inner {
@@ -122,24 +138,48 @@ import Navigation from './Navigation.astro';
     opacity: 0.7;
   }
 
-  .site-header__search-panel {
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    background: var(--color-accent);
-    padding: 1rem 0;
+  .site-header__search-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 1rem;
+  }
+
+  .site-header__search-overlay[hidden] {
+    display: none;
+  }
+
+  .site-header__search-overlay-inner {
+    position: relative;
+    width: min(100%, 640px);
+  }
+
+  .site-header__search-close {
+    position: absolute;
+    top: -3rem;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
   }
 
   .site-header__search-form {
     display: flex;
     gap: 0.75rem;
-    max-width: 480px;
-    margin-inline: auto;
-    padding-inline: 1rem;
+    width: 100%;
   }
 
   .site-header__search-form input {
     flex: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0.875rem 1rem;
+    border: none;
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
     font-size: 1rem;

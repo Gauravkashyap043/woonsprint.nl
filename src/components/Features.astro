@@ -4,7 +4,7 @@ import { latestReviews } from '../data/homepage';
 
 <section class="section section--compact-top reviews" id="laatste-reviews">
   <div class="container">
-    <div class="section-title">
+    <div class="section-title section-title--left">
       <h3>Laatste Reviews</h3>
     </div>
 
@@ -28,6 +28,12 @@ import { latestReviews } from '../data/homepage';
 </section>
 
 <style>
+  .section-title--left,
+  .section-title--left h3,
+  .section-title--left p {
+    text-align: left;
+  }
+
   .reviews__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -42,6 +48,14 @@ import { latestReviews } from '../data/homepage';
 
   .reviews__card {
     margin: 0.625rem;
+  }
+
+  .reviews__card .card__body {
+    text-align: left;
+  }
+
+  .reviews__card .card__title {
+    text-align: left;
   }
 
   .reviews__link:hover .card__title {
