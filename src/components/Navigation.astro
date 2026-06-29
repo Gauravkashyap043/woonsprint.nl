@@ -11,13 +11,79 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
     aria-expanded="false"
     aria-controls="primary-menu"
     aria-label="Menu openen"
+    data-nav-toggle
   >
     <span class="nav__toggle-bar"></span>
     <span class="nav__toggle-bar"></span>
     <span class="nav__toggle-bar"></span>
   </button>
 
-  <ul class="nav__list" id="primary-menu">
+  <div class="nav__backdrop" hidden data-nav-backdrop></div>
+
+  <div class="nav__panel" id="primary-menu" data-nav-panel>
+    <div class="nav__panel-header">
+      <span class="nav__panel-title">Menu</span>
+      <button type="button" class="nav__close" aria-label="Menu sluiten" data-nav-close>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <ul class="nav__list">
+      {
+        mainNavigation.map((item) => {
+          const itemPath = item.href.replace(/\/$/, '') || '/';
+          const isActive = currentPath === itemPath;
+          const hasChildren = item.children && item.children.length > 0;
+
+          return (
+            <li class:list={['nav__item', { 'nav__item--has-children': hasChildren }]}>
+              <div class="nav__row">
+                <a
+                  href={item.href}
+                  class:list={['nav__link', { 'nav__link--active': isActive }]}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+                {
+                  hasChildren && (
+                    <button
+                      type="button"
+                      class="nav__subtoggle"
+                      aria-expanded="false"
+                      aria-label={`${item.label} submenu`}
+                      data-nav-subtoggle
+                    >
+                      <svg class="nav__caret" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+                        <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+                      </svg>
+                    </button>
+                  )
+                }
+              </div>
+              {
+                hasChildren && (
+                  <ul class="nav__dropdown">
+                    {item.children!.map((child) => (
+                      <li>
+                        <a href={child.href} class="nav__dropdown-link">
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )
+              }
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+
+  <ul class="nav__list nav__list--desktop">
     {
       mainNavigation.map((item) => {
         const itemPath = item.href.replace(/\/$/, '') || '/';
@@ -32,23 +98,27 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
               aria-current={isActive ? 'page' : undefined}
             >
               {item.label}
-              {hasChildren && (
-                <svg class="nav__caret" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
-                  <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" />
-                </svg>
-              )}
+              {
+                hasChildren && (
+                  <svg class="nav__caret" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+                    <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+                  </svg>
+                )
+              }
             </a>
-            {hasChildren && (
-              <ul class="nav__dropdown">
-                {item.children!.map((child) => (
-                  <li>
-                    <a href={child.href} class="nav__dropdown-link">
-                      {child.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
+            {
+              hasChildren && (
+                <ul class="nav__dropdown">
+                  {item.children!.map((child) => (
+                    <li>
+                      <a href={child.href} class="nav__dropdown-link">
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )
+            }
           </li>
         );
       })
@@ -57,66 +127,71 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 </nav>
 
 <script>
-  const toggle = document.querySelector('.nav__toggle');
   const nav = document.querySelector('.nav');
-  const dropdownItems = document.querySelectorAll('.nav__item--has-children');
+  const toggle = document.querySelector('[data-nav-toggle]');
+  const closeBtn = document.querySelector('[data-nav-close]');
+  const backdrop = document.querySelector('[data-nav-backdrop]');
+  const panel = document.querySelector('[data-nav-panel]');
+  const subtoggles = document.querySelectorAll('[data-nav-subtoggle]');
+
+  const openNav = () => {
+    nav?.classList.add('nav--open');
+    toggle?.setAttribute('aria-expanded', 'true');
+    toggle?.setAttribute('aria-label', 'Menu sluiten');
+    backdrop?.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeNav = () => {
+    nav?.classList.remove('nav--open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Menu openen');
+    backdrop?.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  };
 
   toggle?.addEventListener('click', () => {
-    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
-    nav?.classList.toggle('nav--open');
-    toggle.setAttribute('aria-label', expanded ? 'Menu openen' : 'Menu sluiten');
+    if (nav?.classList.contains('nav--open')) closeNav();
+    else openNav();
   });
 
-  dropdownItems.forEach((item) => {
-    const link = item.querySelector('.nav__link');
-    link?.addEventListener('click', (e) => {
-      if (window.innerWidth <= 1023) {
-        e.preventDefault();
-        item.classList.toggle('nav__item--expanded');
-      }
+  closeBtn?.addEventListener('click', closeNav);
+  backdrop?.addEventListener('click', closeNav);
+
+  subtoggles.forEach((button) => {
+    button.addEventListener('click', () => {
+      const item = button.closest('.nav__item--has-children');
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!expanded));
+      item?.classList.toggle('nav__item--expanded', !expanded);
     });
   });
 
-  document.addEventListener('click', (e) => {
-    if (!nav?.contains(e.target as Node)) {
-      nav?.classList.remove('nav--open');
-      toggle?.setAttribute('aria-expanded', 'false');
-    }
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeNav();
+  });
+
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', (event) => {
+    if (event.matches) closeNav();
   });
 </script>
 
 <style>
   .nav {
     position: relative;
-    justify-self: center;
   }
 
-  .nav__toggle {
+  .nav__toggle,
+  .nav__backdrop,
+  .nav__panel,
+  .nav__panel-header,
+  .nav__close,
+  .nav__row,
+  .nav__subtoggle {
     display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
   }
 
-  .nav__toggle-bar {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background: var(--color-primary);
-    border-radius: 2px;
-    transition:
-      transform var(--transition),
-      opacity var(--transition);
-  }
-
-  .nav__list {
+  .nav__list--desktop {
     display: flex;
     align-items: center;
     gap: 0.125rem;
@@ -124,7 +199,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
     justify-content: center;
   }
 
-  .nav__item {
+  .nav__list--desktop .nav__item {
     position: relative;
   }
 
@@ -151,9 +226,10 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   .nav__caret {
     margin-top: 2px;
     opacity: 0.7;
+    flex-shrink: 0;
   }
 
-  .nav__dropdown {
+  .nav__list--desktop .nav__dropdown {
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
@@ -172,8 +248,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
     z-index: 200;
   }
 
-  .nav__item--has-children:hover .nav__dropdown,
-  .nav__item--has-children:focus-within .nav__dropdown {
+  .nav__list--desktop .nav__item--has-children:hover .nav__dropdown,
+  .nav__list--desktop .nav__item--has-children:focus-within .nav__dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -197,72 +273,197 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   }
 
   @media (max-width: 1023px) {
-    .nav__toggle {
-      display: flex;
+    .nav__list--desktop {
+      display: none;
     }
 
-    .nav__list {
+    .nav__toggle {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .nav__toggle-bar {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--color-primary);
+      border-radius: 2px;
+      transition:
+        transform var(--transition),
+        opacity var(--transition);
+    }
+
+    .nav--open .nav__toggle-bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav--open .nav__toggle-bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav--open .nav__toggle-bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .nav__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .nav__backdrop[hidden] {
+      display: none;
+    }
+
+    .nav__panel {
+      display: flex;
+      flex-direction: column;
       position: fixed;
       top: 0;
       right: 0;
-      width: min(320px, 85vw);
+      z-index: 160;
+      width: min(320px, 88vw);
       height: 100vh;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-      padding: 5rem 1.5rem 2rem;
+      height: 100dvh;
       background: var(--color-navy);
       transform: translateX(100%);
       transition: transform var(--transition);
-      overflow-y: auto;
-      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
+      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.25);
     }
 
-    .nav--open .nav__list {
+    .nav--open .nav__panel {
       transform: translateX(0);
     }
 
-    .nav__link {
-      width: 100%;
-      padding: 0.875rem 0;
-      color: var(--color-white);
+    .nav__panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+    }
+
+    .nav__panel-title {
+      font-family: var(--font-heading);
       font-size: 1rem;
+      font-weight: 500;
+      color: var(--color-white);
+    }
+
+    .nav__close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      background: transparent;
+      border: none;
+      color: var(--color-white);
+      cursor: pointer;
+    }
+
+    .nav__panel .nav__list {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 0;
+      margin: 0;
+      padding: 0.5rem 0 2rem;
+      overflow-y: auto;
+      flex: 1;
+      list-style: none;
+    }
+
+    .nav__panel .nav__item {
+      display: block;
+      width: 100%;
+    }
+
+    .nav__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      width: 100%;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .nav__dropdown {
+    .nav__panel .nav__link {
+      flex: 1;
+      padding: 0.875rem 1.25rem;
+      color: var(--color-white);
+      font-size: 1rem;
+      border-bottom: none;
+    }
+
+    .nav__subtoggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-right: 0.5rem;
+      padding: 0;
+      background: transparent;
+      border: none;
+      color: var(--color-white);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .nav__item--expanded .nav__subtoggle .nav__caret {
+      transform: rotate(180deg);
+    }
+
+    .nav__panel .nav__dropdown {
+      display: none;
       position: static;
       opacity: 1;
       visibility: visible;
       transform: none;
-      background: transparent;
+      background: rgba(0, 0, 0, 0.2);
       box-shadow: none;
-      max-height: 0;
       overflow: hidden;
       padding: 0;
-      transition: max-height 0.3s ease;
+      margin: 0;
+      list-style: none;
     }
 
     .nav__item--expanded .nav__dropdown {
-      max-height: 500px;
-      padding: 0.5rem 0 0.5rem 1rem;
+      display: block;
     }
 
-    .nav__dropdown-link {
-      padding: 0.5rem 0;
+    .nav__panel .nav__dropdown li {
+      display: block;
+      width: 100%;
+    }
+
+    .nav__panel .nav__dropdown-link {
+      display: block;
+      padding: 0.625rem 1.25rem 0.625rem 2rem;
       font-size: 0.875rem;
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .nav__dropdown-link:hover {
+    .nav__panel .nav__dropdown-link:hover {
       color: var(--color-accent);
       background: transparent;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .nav {
-      justify-self: end;
     }
   }
 </style>

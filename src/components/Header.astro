@@ -7,37 +7,43 @@ import Navigation from './Navigation.astro';
     <a href="/" class="site-header__logo" aria-label="Woonsprint.nl home">
       <img src="/wp-content/uploads/2022/11/Frame-182.svg" alt="Woonsprint.nl" width="178" height="22" />
     </a>
-    <Navigation />
-    <div class="site-header__actions">
-      <div class="site-header__social" aria-label="Social media">
-        <a href="#" class="site-header__social-link" aria-label="Facebook">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+
+    <div class="site-header__tools">
+      <div class="site-header__actions">
+        <div class="site-header__social" aria-label="Social media">
+          <a href="#" class="site-header__social-link" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+            </svg>
+          </a>
+          <a href="#" class="site-header__social-link" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+            </svg>
+          </a>
+          <a href="#" class="site-header__social-link" aria-label="Twitter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+            </svg>
+          </a>
+          <a href="#" class="site-header__social-link" aria-label="TikTok">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"></path>
+            </svg>
+          </a>
+        </div>
+        <button type="button" class="site-header__search" aria-label="Zoeken" data-search-toggle>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="M21 21l-4.35-4.35"></path>
           </svg>
-        </a>
-        <a href="#" class="site-header__social-link" aria-label="Instagram">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <rect x="2" y="2" width="20" height="20" rx="5"></rect>
-            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
-          </svg>
-        </a>
-        <a href="#" class="site-header__social-link" aria-label="Twitter">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-          </svg>
-        </a>
-        <a href="#" class="site-header__social-link" aria-label="TikTok">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"></path>
-          </svg>
-        </a>
+        </button>
       </div>
-      <button type="button" class="site-header__search" aria-label="Zoeken" data-search-toggle>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="M21 21l-4.35-4.35"></path>
-        </svg>
-      </button>
+
+      <div class="site-header__center">
+        <Navigation />
+      </div>
     </div>
   </div>
   <div class="site-header__search-overlay" hidden data-search-overlay>
@@ -86,10 +92,10 @@ import Navigation from './Navigation.astro';
   }
 
   .site-header__inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
     align-items: center;
-    gap: 1.5rem;
+    justify-content: space-between;
+    gap: 1rem;
     padding-block: 0.875rem;
   }
 
@@ -107,15 +113,29 @@ import Navigation from './Navigation.astro';
     height: auto;
   }
 
+  .site-header__tools {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+  }
+
+  .site-header__center {
+    display: flex;
+    align-items: center;
+  }
+
   .site-header__actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.25rem;
+    flex-shrink: 0;
   }
 
   .site-header__social {
-    display: flex;
+    display: none;
     gap: 0.5rem;
+    margin-right: 0.25rem;
   }
 
   .site-header__social-link,
@@ -123,14 +143,15 @@ import Navigation from './Navigation.astro';
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     color: var(--color-primary);
     background: transparent;
     border: none;
     border-radius: 50%;
     cursor: pointer;
     transition: opacity var(--transition);
+    flex-shrink: 0;
   }
 
   .site-header__social-link:hover,
@@ -197,23 +218,38 @@ import Navigation from './Navigation.astro';
     border: 0;
   }
 
-  @media (max-width: 1023px) {
+  @media (min-width: 1024px) {
+    .site-header__inner {
+      display: grid;
+      grid-template-columns: minmax(140px, 18%) 1fr minmax(120px, 16%);
+    }
+
+    .site-header__tools {
+      display: contents;
+    }
+
+    .site-header__center {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .site-header__actions {
+      grid-column: 3;
+      justify-self: end;
+    }
+
     .site-header__social {
-      display: none;
+      display: flex;
     }
   }
 
   @media (max-width: 767px) {
     .site-header__inner {
-      grid-template-columns: 1fr auto;
+      padding-block: 0.75rem;
     }
 
     .site-header__logo img {
       width: 140px;
-    }
-
-    .site-header__actions {
-      display: none;
     }
   }
 </style>
