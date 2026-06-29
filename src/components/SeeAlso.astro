@@ -1,0 +1,44 @@
+---
+import { seeAlsoLinks } from '../data/homepage';
+---
+
+<section class="section section--compact-top see-also">
+  <div class="container">
+    <div class="section-title">
+      <h2>Zie ook</h2>
+    </div>
+    <ul class="see-also__links">
+      {
+        seeAlsoLinks.map((link) => (
+          <li>
+            <a href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noopener noreferrer' : undefined}>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .see-also__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .see-also__links a {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-text);
+    transition: color var(--transition);
+  }
+
+  .see-also__links a:hover {
+    color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+
+const { entry } = Astro.props;
+const { title, description, pubDate, author, categories, tags, featuredImage } = entry.data;
+
+const months = [
+  'januari', 'februari', 'maart', 'april', 'mei', 'juni',
+  'juli', 'augustus', 'september', 'oktober', 'november', 'december',
+];
+const formattedDate = `${months[pubDate.getMonth()]} ${pubDate.getDate()}, ${pubDate.getFullYear()}`;
+---
+
+<BaseLayout
+  title={`${title} | Woonsprint.nl`}
+  description={description}
+  ogImage={featuredImage || '/wp-content/uploads/2022/11/Frame1.svg'}
+>
+  <article class="blog-detail">
+    <div class="container blog-detail__content">
+      <header class="blog-detail__header">
+        <h1>{title}</h1>
+        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        {author && <p class="blog-detail__meta">Door {author}</p>}
+        {
+          categories && categories.length > 0 && (
+            <p class="blog-detail__meta">
+              {categories.map((cat) => (
+                <span class="blog-detail__category">{cat}</span>
+              ))}
+            </p>
+          )
+        }
+      </header>
+      <div class="prose blog-detail__body">
+        <slot />
+      </div>
+      {
+        tags && tags.length > 0 && (
+          <footer class="blog-detail__tags">
+            {tags.map((tag) => (
+              <span class="blog-detail__tag">{tag}</span>
+            ))}
+          </footer>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-detail__content {
+    padding-block: 3rem 4rem;
+    max-width: 820px;
+  }
+
+  .blog-detail__header h1 {
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-detail__header time {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-detail__meta {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-detail__category,
+  .blog-detail__tag {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.25rem 0.625rem;
+    background: rgba(205, 162, 116, 0.12);
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+  }
+
+  .blog-detail__body :global(h2) {
+    margin-top: 2rem;
+  }
+
+  .blog-detail__body :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin-block: 1.5rem;
+  }
+
+  .blog-detail__body :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .blog-detail__tags {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+</style>

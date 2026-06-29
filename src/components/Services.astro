@@ -1,0 +1,112 @@
+---
+import { homepageCategories } from '../data/homepage';
+
+const icons: Record<string, string> = {
+  chair:
+    'M41 16.65V13.5C41 11.51 40.21 9.6 38.8 8.2 37.4 6.79 35.49 6 33.5 6H15.5C13.51 6 11.6 6.79 10.2 8.2 8.79 9.6 8 11.51 8 13.5v3.15C6.3 16.99 4.78 17.91 3.69 19.25 2.59 20.59 1.99 22.27 1.99 24c0 1.73.6 3.41 1.69 4.75 1.1 1.34 2.62 2.26 4.31 2.6V37.5c0 .8.32 1.56.88 2.12.56.56 1.32.88 2.12.88h27c.8 0 1.56-.32 2.12-.88.56-.56.88-1.32.88-2.12V31.35c1.69-.34 3.21-1.26 4.31-2.6 1.09-1.34 1.69-3.02 1.69-4.75 0-1.73-.6-3.41-1.69-4.75-1.1-1.34-2.62-2.26-4.31-2.6Z',
+  bed: 'M39.5 13.5H5V9c0-.4-.16-.78-.44-1.06C4.28 7.66 3.9 7.5 3.5 7.5s-.78.16-1.06.44C2.16 8.22 2 8.6 2 9v30c0 .4.16.78.44 1.06.28.28.66.44 1.06.44s.78-.16 1.06-.44c.28-.28.44-.66.44-1.06V33h33v6.5c0 .4.16.78.44 1.06.28.28.66.44 1.06.44s.78-.16 1.06-.44c.28-.28.44-.66.44-1.06V21c0-1.99-.79-3.9-2.2-5.3-1.4-1.41-3.31-2.2-5.3-2.2Z',
+  table:
+    'M45.5 24c0 1.59-.63 3.12-1.76 4.24-1.12 1.13-2.65 1.76-4.24 1.76v7.5c0 .4-.16.78-.44 1.06-.28.28-.66.44-1.06.44H11c-.4 0-.78-.16-1.06-.44-.28-.28-.44-.66-.44-1.06V30c-1.59 0-3.12-.63-4.24-1.76C4.13 27.12 3.5 25.59 3.5 24c0-1.59.63-3.12 1.76-4.24C6.38 18.63 7.91 18 9.5 18v-4.5c0-1.99.79-3.9 2.2-5.3C12.9 6.79 14.81 6 16.8 6h16.8c1.99 0 3.9.79 5.3 2.2 1.41 1.4 2.2 3.31 2.2 5.3V18c1.59 0 3.12.63 4.24 1.76 1.13 1.12 1.76 2.65 1.76 4.24Z',
+  lamp: 'M24 4c-5.52 0-10 4.48-10 10 0 3.53 1.83 6.63 4.59 8.41L16 28h16l1.41-5.59C36.17 20.63 38 17.53 38 14c0-5.52-4.48-10-10-10Zm-2 30h4v4h-4v-4Z',
+  cooker:
+    'M24 6c-8.28 0-15 6.72-15 15s6.72 15 15 15 15-6.72 15-15S32.28 6 24 6Zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3Zm-6 12c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2H18v-2Z',
+  outdoor:
+    'M24 4l-4 8h8l-4-8Zm-8 10v4h16v-4H16Zm2 6v8h12v-8H18Z',
+  bar: 'M8 10h32v4H8v-4Zm0 8h24v4H8v-4Zm0 8h16v4H8v-4Z',
+  shower:
+    'M24 4C16.27 4 10 10.27 10 18c0 4.42 2.03 8.36 5.2 10.94L12 36h24l-3.2-7.06C35.97 26.36 38 22.42 38 18c0-7.73-6.27-14-14-14Zm0 6c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4Z',
+};
+---
+
+<section class="section categories" id="categorieen">
+  <div class="container">
+    <div class="section-title">
+      <h3>Categorieën</h3>
+      <p>Klik hieronder door op de categorie van jouw keuze</p>
+    </div>
+
+    <div class="categories__grid">
+      {
+        homepageCategories.map((category) => (
+          <a href={category.href} class="categories__card card">
+            <span class="categories__icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <path opacity="0.2" d="M8 8h32v32H8z" fill="#274061" />
+                <path d={icons[category.icon]} fill="#274061" transform="scale(0.85) translate(4 4)" />
+              </svg>
+            </span>
+            <h4 class="categories__title">{category.title}</h4>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .categories {
+    background: var(--color-white);
+    padding-bottom: 7.75rem;
+  }
+
+  .categories__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  .categories__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    color: inherit;
+    margin: 0.625rem;
+  }
+
+  .categories__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .categories__title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0;
+    transition: color var(--transition);
+  }
+
+  .categories__card:hover .categories__title {
+    color: var(--color-navy);
+  }
+
+  @media (max-width: 1023px) {
+    .categories__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .categories {
+      padding-bottom: 4.5rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .categories__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .categories__card {
+      margin: 0;
+      padding: 1.25rem 0.75rem;
+    }
+
+    .categories {
+      padding-bottom: 2.25rem;
+    }
+  }
+</style>

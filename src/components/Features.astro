@@ -1,0 +1,75 @@
+---
+import { latestReviews } from '../data/homepage';
+---
+
+<section class="section section--compact-top reviews" id="laatste-reviews">
+  <div class="container">
+    <div class="section-title">
+      <h3>Laatste Reviews</h3>
+    </div>
+
+    <div class="reviews__grid">
+      {
+        latestReviews.map((review) => (
+          <article class="card reviews__card">
+            <a href={review.href} class="reviews__link">
+              <div class="card__image">
+                <img src={review.image} alt={review.alt} width="400" height="400" loading="lazy" />
+              </div>
+              <div class="card__body">
+                <h4 class="card__title">{review.title}</h4>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    padding-bottom: 7.75rem;
+  }
+
+  .reviews__link {
+    display: block;
+    color: inherit;
+  }
+
+  .reviews__card {
+    margin: 0.625rem;
+  }
+
+  .reviews__link:hover .card__title {
+    color: var(--color-navy);
+  }
+
+  @media (max-width: 1023px) {
+    .reviews__grid {
+      grid-template-columns: repeat(2, 1fr);
+      padding-bottom: 4.5rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .reviews__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      padding-bottom: 2.25rem;
+    }
+
+    .reviews__card {
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .reviews__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

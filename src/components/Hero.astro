@@ -1,0 +1,111 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  image?: string;
+  compact?: boolean;
+}
+
+const {
+  title = 'Transformeer jouw huis in een thuis!',
+  subtitle = 'Geniet jij ook van het inrichten van je thuis en vind je het leuk om te lezen over de nieuwste trends, de beste producten te ontdekken en te snuffelen tussen al die verschillende soorten decoratie? Dan ben je bij ons aan het juiste adres! Wij vergelijken producten voor in huis, bekijken wat er hip is in de wereld van de woninginrichting en houden jou overal van op de hoogte!',
+  image = '/wp-content/uploads/2022/11/Frame1.svg',
+  compact = false,
+} = Astro.props;
+---
+
+<section class:list={['hero', { 'hero--compact': compact }]}>
+  <div class="container hero__grid">
+    <div class="hero__content">
+      <h1>{title}</h1>
+      {subtitle && <p class="hero__subtitle">{subtitle}</p>}
+    </div>
+    {!compact && (
+      <div class="hero__visual">
+        <img src={image} alt="" width="639" height="470" loading="eager" />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--color-navy);
+    padding-block: 7.75rem 7.75rem;
+    margin-top: 0;
+  }
+
+  .hero--compact {
+    padding-block: 4.5rem;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .hero__content {
+    max-width: 560px;
+  }
+
+  .hero h1 {
+    color: var(--color-white);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__subtitle {
+    color: #fffdfd;
+    font-size: clamp(0.9375rem, 2vw, 1rem);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .hero__visual {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .hero__visual img {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .hero--compact .hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 1023px) {
+    .hero {
+      padding-block: 6rem 4.5rem;
+    }
+
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__visual {
+      justify-content: center;
+    }
+
+    .hero__visual img {
+      max-width: 360px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      padding-block: 5.5rem 2.25rem;
+    }
+
+    .hero__visual img {
+      max-width: 50%;
+      margin-inline: auto;
+    }
+  }
+</style>

@@ -1,0 +1,222 @@
+---
+import {
+  footerColumns,
+  footerDescription,
+  footerInfoLinks,
+  socialLinks,
+} from '../data/footer';
+import SocialIcon from './SocialIcon.astro';
+
+const veiligheidColumn = footerColumns.find((c) => c.title === 'Veiligheid')!;
+const slaapkamerColumn = footerColumns.find((c) => c.title === 'Slaapkamer')!;
+const inrichtingColumn = footerColumns.find((c) => c.title === 'Inrichting')!;
+
+const iconMap = {
+  facebook: 'facebook',
+  instagram: 'instagram',
+  twitter: 'twitter',
+  youtube: 'youtube',
+} as const;
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a href="/" class="site-footer__logo">
+          <img src="/wp-content/uploads/2022/11/Frame-19.svg" alt="Woonsprint.nl" width="178" height="22" />
+        </a>
+        <p class="site-footer__desc">{footerDescription}</p>
+        <a href="/sitemap/" class="site-footer__sitemap">Sitemap</a>
+        <div class="site-footer__social" role="list">
+          {
+            socialLinks.map((social) => (
+              <a
+                href={social.href}
+                class="site-footer__social-link"
+                aria-label={social.label}
+                role="listitem"
+                target={social.href.startsWith('http') ? '_blank' : undefined}
+                rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >
+                <SocialIcon icon={iconMap[social.icon as keyof typeof iconMap]} size={16} />
+              </a>
+            ))
+          }
+        </div>
+        <p class="site-footer__copy">© 2026 All rights reserved</p>
+      </div>
+
+      <div class="site-footer__columns">
+        <div class="site-footer__column">
+          <h3 class="site-footer__heading">Informatie</h3>
+          <ul class="site-footer__links">
+            {
+              footerInfoLinks.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="site-footer__column">
+          <h3 class="site-footer__heading">{veiligheidColumn.title}</h3>
+          <ul class="site-footer__links">
+            {
+              veiligheidColumn.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="site-footer__column">
+          <h3 class="site-footer__heading">{slaapkamerColumn.title}</h3>
+          <ul class="site-footer__links">
+            {
+              slaapkamerColumn.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="site-footer__column">
+          <h3 class="site-footer__heading">{inrichtingColumn.title}</h3>
+          <ul class="site-footer__links">
+            {
+              inrichtingColumn.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-white);
+    color: var(--color-text);
+    padding: 3rem 0 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .site-footer__top {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) 1fr;
+    gap: 3rem;
+  }
+
+  .site-footer__logo {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+  }
+
+  .site-footer__desc {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--color-text);
+    max-width: 280px;
+    margin-bottom: 1rem;
+  }
+
+  .site-footer__sitemap {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    margin-bottom: 1.25rem;
+    font-family: var(--font-heading);
+  }
+
+  .site-footer__sitemap:hover {
+    color: var(--color-navy);
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .site-footer__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: var(--color-primary);
+    background: var(--color-accent);
+    border-radius: 50%;
+    transition:
+      transform var(--transition),
+      opacity var(--transition);
+  }
+
+  .site-footer__social-link:hover {
+    transform: translateY(-2px);
+    opacity: 0.85;
+  }
+
+  .site-footer__copy {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .site-footer__heading {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+
+  .site-footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .site-footer__links a {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--color-text);
+    transition: color var(--transition);
+  }
+
+  .site-footer__links a:hover {
+    color: var(--color-navy);
+  }
+
+  @media (max-width: 1023px) {
+    .site-footer__top {
+      grid-template-columns: 1fr;
+    }
+
+    .site-footer__columns {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .site-footer__columns {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

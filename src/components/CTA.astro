@@ -1,0 +1,93 @@
+---
+import { ctaSections } from '../data/homepage';
+
+interface Props {
+  variant?: 'boekenkast' | 'rooms';
+}
+
+const { variant = 'boekenkast' } = Astro.props;
+const section = ctaSections[variant];
+---
+
+<section class:list={['cta-band', { 'cta-band--reverse': section.reverse }]}>
+  <div class="container cta-band__grid">
+    <div class="cta-band__content">
+      <h2>{section.title}</h2>
+      <p>{section.text}</p>
+      <a href={section.href} class="btn btn--outline">{section.ctaLabel}</a>
+    </div>
+    <div class="cta-band__visual">
+      <img src={section.image} alt={section.imageAlt} width="480" height="360" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    background: var(--color-navy);
+    padding-block: 7.75rem;
+  }
+
+  .cta-band__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .cta-band--reverse .cta-band__grid {
+    direction: rtl;
+  }
+
+  .cta-band--reverse .cta-band__content,
+  .cta-band--reverse .cta-band__visual {
+    direction: ltr;
+  }
+
+  .cta-band h2 {
+    color: var(--color-white);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    margin-bottom: 1.25rem;
+  }
+
+  .cta-band p {
+    color: var(--color-white);
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+  }
+
+  .cta-band__visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cta-band__visual img {
+    width: 80%;
+    max-width: 420px;
+  }
+
+  @media (max-width: 1023px) {
+    .cta-band {
+      padding-block: 4.5rem;
+    }
+
+    .cta-band__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-band--reverse .cta-band__grid {
+      direction: ltr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cta-band {
+      padding-block: 2.25rem;
+    }
+
+    .cta-band__visual img {
+      width: 50%;
+    }
+  }
+</style>

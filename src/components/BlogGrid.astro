@@ -1,0 +1,174 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { formatDutchDate, getBlogPostUrl, getFeaturedImage } from '../utils/blog';
+
+interface Props {
+  posts?: CollectionEntry<'blog'>[];
+  limit?: number;
+  showHeading?: boolean;
+  heading?: string;
+  /** Homepage layout: 4-column text-only cards matching live WordPress */
+  compact?: boolean;
+}
+
+const allPosts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const {
+  posts = allPosts,
+  limit,
+  showHeading = true,
+  heading = 'Blogs',
+  compact = false,
+} = Astro.props;
+
+const displayPosts = limit ? posts.slice(0, limit) : posts;
+---
+
+<section class="section" class:list={[{ 'section--compact-top': compact }]}>
+  <div class="container">
+    {
+      showHeading && (
+        <div class="section-title">
+          <h2>{heading}</h2>
+        </div>
+      )
+    }
+
+    <div class:list={['blog-grid', { 'blog-grid--compact': compact }]}>
+      {
+        displayPosts.map((post) => (
+          <article class:list={['blog-card', { card: !compact }]}>
+            <a href={getBlogPostUrl(post.id)} class="blog-card__link">
+              {
+                !compact && (
+                  <div class="blog-card__image">
+                    <img
+                      src={getFeaturedImage(post.data.featuredImage)}
+                      alt={post.data.title}
+                      width="600"
+                      height="396"
+                      loading="lazy"
+                    />
+                  </div>
+                )
+              }
+              <div class="blog-card__body">
+                <h3 class="blog-card__title">{post.data.title}</h3>
+                <time class="blog-card__date" datetime={post.data.pubDate.toISOString()}>
+                  {formatDutchDate(post.data.pubDate)}
+                </time>
+                <p class="blog-card__excerpt">{post.data.description}</p>
+                <span class="blog-card__read-more">Lees verder »</span>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.1875rem 1.875rem;
+  }
+
+  .blog-grid--compact {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.1875rem 1.25rem;
+  }
+
+  .blog-card__link {
+    display: block;
+    color: inherit;
+  }
+
+  .blog-card__image {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.25rem;
+  }
+
+  .blog-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .blog-card:hover .blog-card__image img {
+    transform: scale(1.04);
+  }
+
+  .blog-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 0.5rem;
+    transition: color var(--transition);
+  }
+
+  .blog-grid--compact .blog-card__title {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .blog-card:hover .blog-card__title {
+    color: var(--color-accent);
+  }
+
+  .blog-card__date {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-grid--compact .blog-card__date {
+    font-size: 0.8125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-card__excerpt {
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .blog-grid--compact .blog-card__excerpt {
+    font-size: 0.875rem;
+    -webkit-line-clamp: 2;
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-card__read-more {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 1023px) {
+    .blog-grid--compact {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .blog-grid,
+    .blog-grid--compact {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
