@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import Services from '../components/Services.astro';
+import CTA from '../components/CTA.astro';
+import { siteMeta } from '../data/navigation';
+---
+
+<BaseLayout title={siteMeta.title} description={siteMeta.description}>
+  <Hero />
+  <Features />
+  <Services />
+  <CTA variant="boekenkast" />
+  <CTA variant="rooms" />
+</BaseLayout>

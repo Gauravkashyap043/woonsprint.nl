@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+---
+
+<BaseLayout
+  title="Black Friday Deals | Woonsprint.nl"
+  description="Ontdek de beste Black Friday deals voor woninginrichting op Woonsprint.nl."
+>
+  <Hero
+    title="Black Friday Deals"
+    subtitle="Bekijk onze selectie van de beste aanbiedingen voor jouw huis tijdens Black Friday."
+    compact={true}
+  />
+  <section class="section">
+    <div class="container prose">
+      <p>
+        Tijdens Black Friday vind je bij Woonsprint de scherpste deals op populaire woonproducten. Van
+        slaapkamer tot badkamer en inrichting — wij vergelijken de beste aanbiedingen zodat jij slim kunt
+        shoppen.
+      </p>
+      <p>
+        Bekijk onze <a href="/inrichting/">inrichting</a>, <a href="/slaapkamer/">slaapkamer</a> en{' '}
+        <a href="/badkamer/">badkamer</a> categorieën voor actuele top 10 lijstjes met de beste producten.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  .prose a {
+    color: var(--color-navy);
+    text-decoration: underline;
+  }
+</style>

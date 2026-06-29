@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import BlogGrid from '../../components/BlogGrid.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Blog | Woonsprint.nl"
+  description="Bekijk alle blogs over wonen, interieur en de nieuwste woontrends op Woonsprint.nl."
+>
+  <Hero
+    title="Blog"
+    subtitle="Inspiratie, tips en advies voor jouw woning. Ontdek onze nieuwste blogs over wonen, interieur en klussen."
+    compact={true}
+  />
+  <BlogGrid posts={posts} showHeading={false} />
+</BaseLayout>

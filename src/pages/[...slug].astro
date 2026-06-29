@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPostLayout from '../layouts/BlogPostLayout.astro';
+import ProductPageLayout from '../layouts/ProductPageLayout.astro';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  const productEntries = await getCollection('products');
+
+  const blogPaths = blogEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { type: 'blog' as const, entry },
+  }));
+
+  const productPaths = productEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { type: 'product' as const, entry },
+  }));
+
+  return [...blogPaths, ...productPaths];
+}
+
+const { type, entry } = Astro.props;
+
+let Content;
+if (entry) {
+  ({ Content } = await render(entry));
+}
+---
+
+{
+  type === 'blog' ? (
+    <BlogPostLayout entry={entry!}>
+      <Content />
+    </BlogPostLayout>
+  ) : (
+    <ProductPageLayout entry={entry!}>
+      <Content />
+    </ProductPageLayout>
+  )
+}

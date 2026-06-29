@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import { mainNavigation } from '../data/navigation';
+
+const category = mainNavigation.find((item) => item.href === '/slaapkamer/')!;
+---
+
+<BaseLayout
+  title="Slaapkamer | Woonsprint.nl"
+  description="Vergelijk de beste slaapkamerproducten. Matrassen, dekbedden en meer in onze top 10 lijstjes."
+>
+  <Hero
+    title="Slaapkamer"
+    subtitle="Vind de beste producten voor een comfortabele en rustige slaapkamer. Onze top 10 lijstjes helpen je kiezen."
+    compact={true}
+  />
+  <section class="section">
+    <div class="container">
+      <div class="category-grid">
+        {
+          category.children!.map((item) => (
+            <a href={item.href} class="category-card card">
+              <h3>{item.label}</h3>
+              <span class="category-card__link">Bekijk top 10 »</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .category-card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .category-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-card);
+  }
+
+  .category-card h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-card__link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 1023px) {
+    .category-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .category-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+---
+
+<BaseLayout
+  title="Over ons | Woonsprint.nl"
+  description="Leer het team van Woonsprint.nl kennen. Wij delen onze passie voor wonen, interieur en de beste producten voor jouw huis."
+>
+  <Hero title="Over ons" subtitle="" compact={true} />
+  <section class="section">
+    <div class="container prose">
+      <p>
+        Wij zijn een klein en hecht team en kennen elkaar van onze studie Interieur. Van jongs af aan
+        hebben we allemaal al een passie voor het inrichten van huizen en buitenruimten met de mooiste en
+        beste producten. En iedereen heeft weer een eigen expertise, badkamer, zitkamer of bijvoorbeeld
+        de buitenruimte. Dit maakt ons een perfect team!
+      </p>
+      <p>
+        Voor Woonsprint vergelijken we speciaal voor jou de beste producten en zetten deze in overzichtelijke
+        top 10 lijsten. Maar ook bekijken we de laatste trends en schrijven we blogs over alles wat maar met
+        woninginrichting te maken heeft met allerlei tips voor jou! Wonen is onze passie en we hopen jou te
+        inspireren met onze pagina.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  .hero--compact .hero__subtitle {
+    display: none;
+  }
+</style>

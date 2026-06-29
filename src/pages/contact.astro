@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<BaseLayout title="Contact | Woonsprint.nl" description="Neem contact op met Woonsprint.nl voor vragen, tips of suggesties.">
+  <Hero
+    title="Contact"
+    subtitle=""
+    compact={true}
+  />
+  <Contact />
+</BaseLayout>
+
+<style is:global>
+  .hero--compact .hero__subtitle {
+    display: none;
+  }
+</style>
