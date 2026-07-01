@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   site: 'https://woonsprint.nl',
+  trailingSlash: 'always',
   compressHTML: true,
   integrations: [mdx()],
 });

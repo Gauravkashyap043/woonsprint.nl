@@ -23,9 +23,18 @@ export async function getStaticPaths() {
 const { type, entry } = Astro.props;
 
 let Content;
-if (entry) {
+if (entry && type === 'blog') {
   ({ Content } = await render(entry));
 }
+
+function splitProductBody(body: string) {
+  const introMatch = body.match(/<div class="product-hero-intro">[\s\S]*?<\/div>/);
+  const introHtml = introMatch?.[0] ?? '';
+  const bodyHtml = body.replace(introHtml, '').trim();
+  return { introHtml, bodyHtml };
+}
+
+const productParts = entry && type === 'product' ? splitProductBody(entry.body) : null;
 ---
 
 {
@@ -34,8 +43,10 @@ if (entry) {
       <Content />
     </BlogPostLayout>
   ) : (
-    <ProductPageLayout entry={entry!}>
-      <Content />
-    </ProductPageLayout>
+    <ProductPageLayout
+      entry={entry!}
+      introHtml={productParts!.introHtml}
+      bodyHtml={productParts!.bodyHtml}
+    />
   )
 }

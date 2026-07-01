@@ -194,13 +194,19 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   .nav__list--desktop {
     display: flex;
     align-items: center;
-    gap: 0.125rem;
-    flex-wrap: wrap;
+    gap: 0;
+    flex-wrap: nowrap;
     justify-content: center;
+    width: 100%;
   }
 
   .nav__list--desktop .nav__item {
     position: relative;
+  }
+
+  .nav__list--desktop .nav__link {
+    padding: 0.5rem 0.625rem;
+    white-space: nowrap;
   }
 
   .nav__link {

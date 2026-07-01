@@ -1,17 +1,19 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
+import '../styles/product-elementor.css';
 
 interface Props {
   entry: CollectionEntry<'products'>;
+  introHtml: string;
+  bodyHtml: string;
 }
 
-const { entry } = Astro.props;
+const { entry, introHtml, bodyHtml } = Astro.props;
 const {
   title,
   heading,
   description,
-  updatedDate,
   updatedLabel,
   breadcrumbParent,
   breadcrumbParentHref,
@@ -24,56 +26,93 @@ const formattedUpdated =
   `Laatst bijgewerkt: ${entry.data.updatedDate.getDate()} ${months[entry.data.updatedDate.getMonth()]} ${entry.data.updatedDate.getFullYear()}`;
 ---
 
-<BaseLayout title={title} description={description} ogImage="/images/brand/hero-bg.png">
+<BaseLayout title={title} description={description} ogImage="/wp-content/uploads/2022/11/Frame1.svg">
   <article class="product-detail">
-    <section class="product-detail__hero">
-      <div class="product-detail__hero-overlay"></div>
-      <div class="container product-detail__hero-inner">
-        <nav class="product-detail__breadcrumb" aria-label="Breadcrumb">
-          <a href="/">Home</a>
-          <span aria-hidden="true"> » </span>
-          <a href={breadcrumbParentHref}>{breadcrumbParent}</a>
-          <span aria-hidden="true"> » </span>
-          <span>{breadcrumbLabel}</span>
-        </nav>
-        <h1>{heading}</h1>
-        <p class="product-detail__updated">{formattedUpdated}</p>
+    <section class="product-detail__top">
+      <div class="container product-detail__top-grid">
+        <div class="product-detail__top-main">
+          <nav class="product-detail__breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span aria-hidden="true"> » </span>
+            <a href={breadcrumbParentHref}>{breadcrumbParent}</a>
+            <span aria-hidden="true"> » </span>
+            <span>{breadcrumbLabel}</span>
+          </nav>
+          <h1>{heading}</h1>
+          <p class="product-detail__updated">{formattedUpdated}</p>
+          {introHtml && <Fragment set:html={introHtml} />}
+        </div>
+        <div class="product-detail__top-visual" aria-hidden="true">
+          <img
+            src="/wp-content/uploads/2022/11/Frame1.svg"
+            alt=""
+            width="639"
+            height="470"
+            loading="eager"
+          />
+        </div>
       </div>
     </section>
 
-    <div class="container product-detail__content">
-      <slot />
-    </div>
+    <section class="product-detail__main">
+      <div class="container">
+        <Fragment set:html={bodyHtml} />
+      </div>
+    </section>
   </article>
 </BaseLayout>
 
+<script>
+  document.querySelectorAll('.elementor-accordion-item').forEach((item) => {
+    const title = item.querySelector('.elementor-tab-title');
+    const content = item.querySelector('.elementor-tab-content');
+    if (!title || !content) return;
+
+    content.classList.remove('elementor-active');
+    title.setAttribute('aria-expanded', 'false');
+
+    title.addEventListener('click', () => {
+      const isOpen = title.getAttribute('aria-expanded') === 'true';
+      title.setAttribute('aria-expanded', String(!isOpen));
+      content.classList.toggle('elementor-active', !isOpen);
+    });
+  });
+</script>
+
 <style>
-  .product-detail__hero {
-    position: relative;
+  .product-detail__top {
     background: var(--color-navy);
-    background-image: url('/images/brand/hero-bg.png');
-    background-size: cover;
-    background-position: center;
-    color: var(--color-white);
-    padding: 7rem 0 4rem;
+    padding: 5rem 0 3rem;
   }
 
-  .product-detail__hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: var(--color-navy-overlay);
+  .product-detail__top-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
   }
 
-  .product-detail__hero-inner {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    max-width: 820px;
+  .product-detail__top-main {
+    max-width: 560px;
+    text-align: left;
+  }
+
+  .product-detail__top-visual {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+
+  .product-detail__top-visual img {
+    max-width: min(100%, 520px);
+    height: auto;
   }
 
   .product-detail__breadcrumb {
+    font-family: var(--font-heading);
     font-size: 0.875rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     color: rgba(255, 255, 255, 0.85);
   }
 
@@ -85,141 +124,73 @@ const formattedUpdated =
     color: var(--color-accent);
   }
 
-  .product-detail__hero h1 {
+  .product-detail__top-main h1 {
     color: var(--color-white);
     font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.2;
     margin-bottom: 1rem;
+    text-align: left;
   }
 
   .product-detail__updated {
+    font-family: var(--font-heading);
     font-size: 0.9375rem;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 2rem;
+    margin: 0 0 1.5rem;
   }
 
-  .product-detail__content {
-    padding-block: 3rem 4rem;
-  }
-
-  .product-detail__content :global(.product-hero-intro) {
-    text-align: center;
-    max-width: 820px;
-    margin: 0 auto 3rem;
-  }
-
-  .product-detail__content :global(.product-hero-intro p) {
-    line-height: 1.65;
-    margin-bottom: 1rem;
-    color: var(--color-text);
-  }
-
-  .product-detail__content :global(.product-hero-intro .elementor-button) {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.875rem 1.75rem;
-    background: var(--color-accent);
-    color: var(--color-white);
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .product-detail__content :global(.product-hero-intro .elementor-button:hover) {
-    background: #b8915f;
+  .product-detail__top-main :global(.product-hero-intro) {
     color: var(--color-white);
   }
 
-  .product-detail__content :global(.product-body h2) {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .product-detail__content :global(.product-body h3) {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
-    line-height: 1.4;
-  }
-
-  .product-detail__content :global(.product-body .elementor-section) {
-    margin-bottom: 0;
-  }
-
-  .product-detail__content :global(.product-body .elementor-column-wrap) {
-    padding: 0.5rem;
-  }
-
-  .product-detail__content :global(.product-body .elementor-container) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .product-detail__content :global(.product-body .elementor-col-66) {
-    flex: 1 1 calc(66% - 1rem);
-    min-width: 280px;
-  }
-
-  .product-detail__content :global(.product-body .elementor-col-33) {
-    flex: 1 1 calc(33% - 1rem);
-    min-width: 220px;
-  }
-
-  .product-detail__content :global(.product-body .elementor-col-50) {
-    flex: 1 1 calc(50% - 1rem);
-    min-width: 260px;
-  }
-
-  .product-detail__content :global(.product-body .elementor-inner-section .elementor-container) {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-
-  .product-detail__content :global(.product-body .elementor-row) {
-    display: contents;
-  }
-
-  .product-detail__content :global(.product-body img) {
-    max-width: 400px;
-    height: auto;
-    float: left;
-    margin: 0 1.25rem 1rem 0;
-    border-radius: var(--radius-sm);
-  }
-
-  .product-detail__content :global(.product-body p) {
+  .product-detail__top-main :global(.product-hero-intro p) {
+    color: rgba(255, 255, 255, 0.95);
     line-height: 1.65;
     margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .product-detail__main {
+    background: var(--color-white);
+    color: var(--color-text);
+    padding: 3rem 0 0;
+  }
+
+  .product-detail__main :global(.product-body),
+  .product-detail__main :global(.product-body p),
+  .product-detail__main :global(.product-body h2),
+  .product-detail__main :global(.product-body h3) {
     color: var(--color-text);
   }
 
-  .product-detail__content :global(.product-body a) {
+  .product-detail__main :global(.product-body a:not(.elementor-button)) {
     color: var(--color-accent);
     text-decoration: underline;
   }
 
-  .product-detail__content :global(.product-body .elementor-button) {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    background: var(--color-accent);
-    color: var(--color-white) !important;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    text-decoration: none !important;
-  }
-
   @media (max-width: 1023px) {
-    .product-detail__content :global(.product-body .elementor-row) {
+    .product-detail__top {
+      padding-top: 4rem;
+    }
+
+    .product-detail__top-grid {
       grid-template-columns: 1fr;
     }
 
-    .product-detail__content :global(.product-body img) {
-      float: none;
-      margin: 0 auto 1rem;
-      display: block;
+    .product-detail__top-visual {
+      order: -1;
+      justify-content: center;
+      padding-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .product-detail__top-visual img {
+      max-width: 260px;
+    }
+
+    .product-detail__top-main {
+      max-width: 100%;
     }
   }
 </style>
